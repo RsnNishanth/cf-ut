@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Form</title>
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md">
+    <h1 class="text-2xl font-bold text-center text-gray-800 mb-6">Contact Us</h1>
+    <form id="contactForm" class="space-y-4">
+      <!-- Number Input -->
+      <div>
+        <label for="number" class="block text-sm font-medium text-gray-700">Contact Number</label>
+        <input type="text" id="number" name="number" placeholder="Enter your number" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+      </div>
+
+      <!-- Name Input -->
+      <div>
+        <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
+        <input type="text" id="name" name="name" placeholder="Enter your name" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+      </div>
+
+      <!-- Email Input -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+        <input type="email" id="email" name="email" placeholder="Enter your email" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
+      </div>
+
+      <!-- Message Input -->
+      <div>
+        <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
+        <textarea id="message" name="message" rows="5" placeholder="Enter your message" class="mt-1 block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <div>
+        <button type="submit" class="w-full bg-indigo-600 text-white p-2 rounded-md shadow-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+          Submit
+        </button>
+      </div>
+    </form>
+    <div id="result" class="mt-4 text-green-600 text-center hidden">
+      Form Submitted Successfully!
+    </div>
+  </div>
+
+  <!-- Firebase Integration -->
+  <script type="module">
+    // Import Firebase SDK and Database SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-app.js";
+    import { getDatabase, ref, push } from "https://www.gstatic.com/firebasejs/10.13.2/firebase-database.js";
+
+    // Your web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyD-vfUtN-bASEYd3SKGZxfjab0-xg3btZw",
+      authDomain: "cf-ut-ade3b.firebaseapp.com",
+      databaseURL: "https://cf-ut-ade3b-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "cf-ut-ade3b",
+      storageBucket: "cf-ut-ade3b.appspot.com",
+      messagingSenderId: "1001687752789",
+      appId: "1:1001687752789:web:ae4790dd7ac58c7fd434dc"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+
+    // Handle form submission
+    const form = document.getElementById('contactForm');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // Get form data
+      const number = document.getElementById('number').value;
+      const name = document.getElementById('name').value;
+      const email = document.getElementById('email').value;
+      const message = document.getElementById('message').value;
+
+      // Push data to Firebase Realtime Database
+      const contactsRef = ref(database, 'contacts/');
+      push(contactsRef, {
+        number: number,
+        name: name,
+        email: email,
+        message: message
+      }).then(() => {
+        // Show success message and reset form
+        document.getElementById('result').classList.remove('hidden');
+        form.reset();
+      }).catch((error) => {
+        alert('Error: ' + error.message);
+      });
+    });
+  </script>
+</body>
+</html>
